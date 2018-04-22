@@ -182,7 +182,6 @@ function displayRating(num){
     case 3:
       finalRating.innerHTML = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>';
       break;
-      
   }
 }
 
