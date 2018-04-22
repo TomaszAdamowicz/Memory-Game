@@ -100,7 +100,8 @@ h1
     height: 125px;
 
     cursor: pointer;
-    transition: .3s ease-in-out;
+    -webkit-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
 
     color: #fff;
     border-radius: 8px;
@@ -176,6 +177,10 @@ h1
     cursor: pointer;
 }
 
+/*
+ * Styles for the Modal window
+ */
+
 .end-game-notification
 {
     position: absolute;
@@ -209,4 +214,38 @@ h1
 {
     color: #02ccba;
     background-color: #fff;
+}
+
+/*
+ * Media
+ */
+
+@media (max-width: 700px )
+{
+    .score-panel
+    {
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+
+        width: 100%;
+        max-width: 345px;
+        padding: 0 10px 0 10px;
+    }
+
+    .deck
+    {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .card
+    {
+        margin: 10px;
+    }
+
+    .end-game-notification
+    {
+        width: 80%;
+        margin: 0 auto;
+    }
 }
