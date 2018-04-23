@@ -67,12 +67,12 @@ h1
     -ms-flex-align: center;
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
 
     width: 660px;
-    min-height: 680px;
+    height: 660px;
     margin: 0 0 3em;
     padding: 32px;
 
@@ -98,6 +98,7 @@ h1
 
     width: 125px;
     height: 125px;
+    margin: 10px;
 
     cursor: pointer;
     -webkit-transition: .3s ease-in-out;
@@ -217,6 +218,84 @@ h1
 }
 
 /*
+ * Styles for the Combo notification
+ */
+
+.combo-notification
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    -webkit-transform: translate(-50%,-50%) scale(0);
+            transform: translate(-50%,-50%) scale(0);
+    pointer-events: none;
+
+    opacity: 0;
+    color: #aa7ecd;
+}
+
+.scaleUp
+{
+    -webkit-animation: scaleUp .8s linear infinite;
+            animation: scaleUp .8s linear infinite;
+}
+
+@-webkit-keyframes scaleUp
+{
+    0%
+    {
+        -webkit-transform: translate(-50%,-50%) scale(0);
+                transform: translate(-50%,-50%) scale(0);
+
+        opacity: 1;
+    }
+
+    50%
+    {
+        -webkit-transform: translate(-50%,-50%) scale(10);
+                transform: translate(-50%,-50%) scale(10);
+
+        opacity: 1;
+    }
+
+    100%
+    {
+        -webkit-transform: translate(-50%,-50%) scale(20);
+                transform: translate(-50%,-50%) scale(20);
+
+        opacity: 0;
+    }
+}
+
+@keyframes scaleUp
+{
+    0%
+    {
+        -webkit-transform: translate(-50%,-50%) scale(0);
+                transform: translate(-50%,-50%) scale(0);
+
+        opacity: 1;
+    }
+
+    50%
+    {
+        -webkit-transform: translate(-50%,-50%) scale(10);
+                transform: translate(-50%,-50%) scale(10);
+
+        opacity: 1;
+    }
+
+    100%
+    {
+        -webkit-transform: translate(-50%,-50%) scale(20);
+                transform: translate(-50%,-50%) scale(20);
+
+        opacity: 0;
+    }
+}
+
+/*
  * Media
  */
 
@@ -234,18 +313,29 @@ h1
 
     .deck
     {
-        width: 100%;
+        width: 80%;
+        height: auto;
         padding: 15px;
     }
 
-    .card
+    .deck .card
     {
-        margin: 10px;
+        width: 90px;
+        height: 90px;
     }
 
     .end-game-notification
     {
         width: 80%;
         margin: 0 auto;
+    }
+}
+
+@media (max-width: 390px)
+{
+    .deck
+    {
+        height: auto;
+        padding: 0;
     }
 }
