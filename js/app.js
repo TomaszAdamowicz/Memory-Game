@@ -39,6 +39,7 @@ let cards = [],
     moves = 0,
     rating = 3,
     matchedCards = 0,
+    comboCounter = 0,
     seconds = 0,
     minutes = 0;
 /*
@@ -88,20 +89,21 @@ function shuffle(array) {
 
 /*
 * Add event listener to each cards in the @cards list.
-* Fire game functions. Do it only when @cardsCollection array has two items in it.
+* Fire game functions. Do it only when item wasn't cliked and @cardsCollection array has two items in it.
 */
 
 function activateCard(){
   for (let i = 0; i < cards.length; i++) {
     
     cards[i].addEventListener('click', (e) => {
-      if (cardsCollection.length <= 1){
+      if (!(e.target.classList.contains('open')) && (cardsCollection.length <= 1)){
         addCards(e.target);
         showCard(e.target);
         checkCards();
         updateMoves(moves);
         updateRating(moves);
         checkWin(matchedCards);
+        console.log(comboCounter);
         if(moves === 1){
           startTimer();
         }
@@ -149,17 +151,40 @@ function dismisCards(){
   for (let i = 0; i < cards.length; i++) {
     setTimeout(()=>{cards[i].classList.remove('open','show','flip'), cardsCollection = []},1000);
   }
+  comboCounter = 0;
 }
-// Invoked by checkCards(). Increases matchedCards variable {number}.
+// Invoked by checkCards(). Increases matchedCards variable.
 function acceptCards(){
   let winCards = document.querySelectorAll('div .open');
-  
+  comboCounter++;
+  combo(comboCounter);
   for (let i = 0; i < winCards.length; i++) {
-    winCards[i].classList.add('match');
-    winCards[i].classList.remove('open', 'show');
+    animateCard(winCards[i]);
     cardsCollection = [];
     matchedCards++;
   }
+}
+
+/*Invoked by acceptCards().
+* Fires combo notifiaction.
+* @ param {number} num - nubmer to compare and to print in combo notification.
+*/
+function combo(num){
+  const comboWindow = document.getElementById('combo'),
+        comboNumber = document.getElementById('combo-number');
+  
+  if (num >= 2) {
+    comboNumber.textContent = num;
+    comboWindow.classList.add('scaleUp');
+    setTimeout(()=>{comboWindow.classList.remove('scaleUp')}, 800);
+  }
+}
+
+// Invoked by acceptCards(). @ param {object} item - item to add/remove css styles.
+function animateCard(item){
+  item.classList.add('match');
+  item.classList.remove('open', 'show');
+  setTimeout(()=>{item.style.opacity = 0},1000);
 }
 
 /*
@@ -312,6 +337,7 @@ function restartGame(){
   matchedCards = 0;
   moves = 0;
   rating = 3;
+  comboCounter = 0;
   updateRating(0);
   updateMoves(0);
   resetDeck();
