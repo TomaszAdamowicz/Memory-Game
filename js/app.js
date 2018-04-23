@@ -1,6 +1,23 @@
 // Variables
-const deck = document.getElementById('deck'),
-      cards = document.querySelectorAll('.card'),
+const symbols = [
+      'fa-anchor',
+      'fa-bicycle',
+      'fa-paper-plane-o',
+      'fa-diamond',
+      'fa-bomb',
+      'fa-leaf',
+      'fa-cube',
+      'fa-bolt',
+      'fa-anchor',
+      'fa-bicycle',
+      'fa-paper-plane-o',
+      'fa-diamond',
+      'fa-bomb',
+      'fa-leaf',
+      'fa-cube',
+      'fa-bolt'
+      ],
+      deck = document.getElementById('deck'),
       restartBtn = document.getElementById('restart'),
       winInfo = document.getElementById('modal'),
       againBtn = document.getElementById('play-again'),
@@ -8,32 +25,53 @@ const deck = document.getElementById('deck'),
       sec = document.getElementById('seconds'),
       min = document.getElementById('minutes');
 
-let cardsCollection = [],
+/*
+ * Variables which are going to be reassigned later:
+ * - @cardsCollection - list of css classes to compare by checkCards()
+ * - @moves - number of user moves incremented by updateMoves()
+ * - @rating - variable determining star rating of the player used by updateRating(),
+ * - @matchedCards - number of cards passed by acceptCards()
+ * - @seconds,@minutes - numbers used by timer(), startTimer(), stopTimer(), resetTimer()
+ */
+
+let cards = [],
+    cardsCollection = [],
     moves = 0,
     rating = 3,
     matchedCards = 0,
     seconds = 0,
     minutes = 0;
-
 /*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
+ * Display the cards on the page with createDeck().
+ *   - shuffle the list of symbols using shuffle();
+ *   - loop through symbols and create card HTML.
+ *   - add each card's HTML to the page.
+ *   - add each card to cards array.
+ *   - listen for the click event on created HTML cards with activateCard().
  */
-resetDeck();
 
-function resetDeck(){
-  cardsArray = Array.from(cards);
+createDeck();
 
-  shuffledCards = shuffle(cardsArray);
-
-  for (let i = 0; i < shuffledCards.length; i++) {
-    deck.append(shuffledCards[i]);
+function createDeck(){
+  let shuffledSymbols = shuffle(symbols);
+    
+  for (let i = 0; i < shuffledSymbols.length; i++) {
+    const card = document.createElement('li'),
+          cardSymbol = document.createElement('i');
+    
+    cardSymbol.classList.add('fa',shuffledSymbols[i]);
+    card.append(cardSymbol);
+    card.classList.add('card');
+    deck.append(card);
+    cards.push(card);
   }
+  
+  activateCard();
 }
 
-// Shuffle function from http://stackoverflow.com/a/2450976
+/* Shuffle function from http://stackoverflow.com/a/2450976
+* @ param {array} array - Array of elements to shuffle
+*/
 function shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -49,48 +87,55 @@ function shuffle(array) {
 }
 
 /*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+* Add event listener to each cards in the @cards list.
+* Fire game functions. Do it only when @cardsCollection array has two items in it.
+*/
 
-// Event listener for cards clicked
-for (let i = 0; i < cards.length; i++) {
-  
-  cards[i].addEventListener('click', (e) => {
-    if (cardsCollection.length <= 1){
-      addCards(e);
-      showCard(e);
-      checkCards();
-      updateMoves(moves);
-      updateRating(moves);
-      checkWin(matchedCards);
-      if(moves === 1){
-        startTimer();
+function activateCard(){
+  for (let i = 0; i < cards.length; i++) {
+    
+    cards[i].addEventListener('click', (e) => {
+      if (cardsCollection.length <= 1){
+        addCards(e.target);
+        showCard(e.target);
+        checkCards();
+        updateMoves(moves);
+        updateRating(moves);
+        checkWin(matchedCards);
+        if(moves === 1){
+          startTimer();
+        }
       }
-    }
-  });
+    });
+  }
 }
 
-// Add cards to the checking list
+/*
+* Invoked by activateCard().
+* Add clicked card to cards collection array.
+* @param {object} item - Target of event listener
+*/
 function addCards(item){
-  let card = item.target.firstElementChild.className;
+  let card = item.firstElementChild.className;
       
   cardsCollection.push(card);
 }
 
-// Show clicked card
+/*
+* Invoked by activateCard().
+* Add css classes to clicked item.
+* @param {object} item - Target of event listener
+*/
 function showCard(item){
-  item.target.classList.add('open','show','flip');
+  item.classList.add('open','show','flip');
   moves++;
 }
 
-// Check cards for match. If doesn't match dismiss them.
+/*
+* Invoked by activateCard().
+* Check number of cards in cardsCollection array, and compare them.
+* Fire function depending on the result.
+*/
 function checkCards(){
   if ((cardsCollection.length === 2) && (cardsCollection[0] != cardsCollection[1])) {
     dismisCards();
@@ -99,12 +144,13 @@ function checkCards(){
   }
 }
 
+// Invoked by checkCards(). Remove css classes from cards in cardsCollection array.
 function dismisCards(){
   for (let i = 0; i < cards.length; i++) {
     setTimeout(()=>{cards[i].classList.remove('open','show','flip'), cardsCollection = []},1000);
   }
 }
-
+// Invoked by checkCards(). Increases matchedCards variable {number}.
 function acceptCards(){
   let winCards = document.querySelectorAll('div .open');
   
@@ -116,13 +162,22 @@ function acceptCards(){
   }
 }
 
-// Update moves counter
+/*
+* Invoked by activateCard().
+* Display number of moves to the player.
+* @ param {number} num - value of moves variable.
+*/
 function updateMoves(num){
   const movesCounter = document.getElementById('moves');
   movesCounter.textContent = num;
 }
 
-// Compare moves with star rating
+/*
+* Invoked by activateCard().
+* Compare number of moves with star rating.
+* Decrease rating accordingly to number of moves.
+* @ param {number} num - value of moves variable.
+*/
 function updateRating(num){
   switch (num) {
     case 0:
@@ -138,14 +193,14 @@ function updateRating(num){
       score[1].style.color = '#fff';
       rating--;
       break;
-    case 40:
-      score[0].style.color = '#fff';
-      rating--;
-      break;
   }
 }
 
-// Check for win
+/*
+* Invoked by activateCard().
+* Check if number of matched cards is equal to overall number of cards in the dec.
+* @ param {number} num - value of acceptedCards variable.
+*/
 function checkWin(num){
   if (num === cards.length) {
     finalMessage();
@@ -153,7 +208,7 @@ function checkWin(num){
   }
 }
 
-// Display modal when game is finished
+// Invoked by checkWin(). Display modal message if checkWin() condition is true.
 function finalMessage() {
   const finalCount = document.getElementById('moves-final-count'),
         seconds = document.getElementById('final-seconds'),
@@ -165,14 +220,15 @@ function finalMessage() {
   printTime(minutes,seconds);
 }
 
-// Rating for modal message
+/*
+* Invoked by finalMessage().
+* Display star rating in modal message based on rating variable.
+* @ param {number} num - value of rating variable.
+*/
 function displayRating(num){
   const finalRating = document.getElementById('final-rating');
   
   switch (num) {
-    case 0:
-      finalRating.textContent = '0 stars :(';
-      break;
     case 1:
       finalRating.innerHTML = '<i class="fa fa-star"></i>';
       break;
@@ -185,22 +241,29 @@ function displayRating(num){
   }
 }
 
-// Timer
+/*
+* Set of timer functions : startTimer(), stopTimer(), resetTimer().
+* timer() - increases seconds and minutes variables.
+*/
+// Invoked by activateCard().
 function startTimer() {
   interval = setInterval(timer,1000);
 }
 
+// Invoked by checkWin().
 function stopTimer(){
   clearInterval(interval);
 }
 
+// Invoked by resetGame().
 function resetTimer(){
   seconds = 0;
   minutes = 0;
   stopTimer();
   printTime(min,sec);
 }
-        
+
+// Invoked by startTimer().
 function timer(){
   if ((seconds >= 0) && (seconds < 59)) {
     seconds++
@@ -210,6 +273,12 @@ function timer(){
   }
   printTime(min,sec);
 };
+
+/*
+* Invoked by timer(), resetTimer(), finalMessage().
+* Display time from startTimer()
+* @ param {object} elem1,elem2 - place to display time.
+*/
 
 function printTime(elem1,elem2){
   if (minutes < 10) {
@@ -225,27 +294,34 @@ function printTime(elem1,elem2){
   }
 }
 
-// Restart button, Play again button
 restartBtn.addEventListener('click', () => {
   restartGame();
-  resetTimer();
 });
 
+// Hide modal window and restart game
 againBtn.addEventListener('click', () => {
   winInfo.style.display = 'none';
   restartGame();
 });
 
+// Reset all variables to initial value, remove cards HTML and create new set, reset timer.
+
 function restartGame(){
-  for (let i = 0; i < cards.length; i++) {
-    cards[i].classList.remove('match' , 'open' , 'show');
-  }
   cardsCollection = [];
+  cards = [];
   matchedCards = 0;
   moves = 0;
   rating = 3;
   updateRating(0);
   updateMoves(0);
   resetDeck();
+  createDeck();
   resetTimer();
+}
+
+// Remove all cards HTML
+function resetDeck(){
+  while(deck.firstChild){
+    deck.removeChild(deck.firstChild);
+  }
 }
