@@ -265,7 +265,7 @@ function saveUser(){
 
 /*
 * Invoked by saveUser(), displayResults().
-* @ param {num} pos - position in sessionStorage array.
+* @ param {string} key - sessionStorage key.
 * Creates paragraph with user name and score.
 */
 function addUserScore(key){
