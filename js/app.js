@@ -86,28 +86,31 @@ function shuffle(array) {
     return array;
 }
 
-/*
-* Add event listener to each cards in the @cards list.
-* Fire game functions. Do it only when item wasn't cliked and @cardsCollection array has two items in it.
-*/
+
+// Loop through cards and fire clickCard().
 function activateCard(){
-  for (let i = 0; i < cards.length; i++) {
-    
-    cards[i].addEventListener('click', (e) => {
-      if (!(e.target.classList.contains('open')) && (cardsCollection.length <= 1)){
-        addCards(e.target);
-        showCard(e.target);
-        checkCards();
-        updateMoves(moves);
-        updateRating(moves);
-        checkWin(matchedCards);
-        console.log(comboCounter);
-        if(moves === 1){
-          startTimer();
-        }
+  cards.forEach(clickCard);
+}
+
+/*
+* Fire game functions. @ param {object} - card in cards[]
+*Do it only when item wasn't cliked and @cardsCollection array has two items in it.
+*
+*/
+function clickCard(elem){
+  elem.addEventListener('click', (e) => {
+    if (!(e.target.classList.contains('open')) && (cardsCollection.length <= 1)){
+      addCards(e.target);
+      showCard(e.target);
+      checkCards();
+      updateMoves(moves);
+      updateRating(moves);
+      checkWin(matchedCards);
+      if(moves === 1){
+        startTimer();
       }
-    });
-  }
+    }
+});
 }
 
 /*
@@ -156,12 +159,12 @@ function dismisCards(){
 function acceptCards(){
   let winCards = document.querySelectorAll('div .open');
   comboCounter++;
+  cardsCollection = [];
   combo(comboCounter);
-  for (let i = 0; i < winCards.length; i++) {
-    animateCard(winCards[i]);
-    cardsCollection = [];
+  winCards.forEach((card)=>{
+    animateCard(card);
     matchedCards++;
-  }
+  });
 }
 
 /*Invoked by acceptCards().
@@ -255,11 +258,8 @@ document.getElementById('save-result').addEventListener('click',()=>{
 //Invoked by save-result button. Adds new user score name and score to sessionStorage.
 function saveUser(){
   let userName = document.getElementById('user-name').value;
-  
-  console.log(userName);
-  
+    
   sessionStorage.setItem(userName,moves);
-  
   addUserScore(userName);
 }
 
