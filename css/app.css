@@ -196,6 +196,11 @@ h1
             box-shadow: 5px 2px 20px 0 rgba(0,0,0, 1);
 }
 
+.user-name
+{
+    height: 35px;
+}
+
 .again-button
 {
     padding: 10px 20px;
@@ -215,6 +220,11 @@ h1
 {
     color: #02ccba;
     background-color: #fff;
+}
+
+.results
+{
+    width: 100%;
 }
 
 /*
@@ -328,6 +338,12 @@ h1
     {
         width: 80%;
         margin: 0 auto;
+    }
+
+    .user-name,
+    .againBtn
+    {
+        margin-bottom: 10px;
     }
 }
 
