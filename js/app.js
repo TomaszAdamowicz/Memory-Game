@@ -248,33 +248,59 @@ function finalMessage() {
   finalCount.textContent = moves;
   displayRating(rating);
   printTime(minutes,seconds);
+  updateResults();
 }
 
-//Saves user name and score in sessionStorage
+updateResults();
+
+function updateResults(){
+  const results = document.getElementById('results');
+
+  if (results.childElementCount === 0) {
+    for (let i = 0; i < localStorage.length; i++) {
+      const num = localStorage.key(i),
+          value = localStorage.getItem(num);
+          
+      addUserScore(num,value,false);
+    }
+  }
+}
+
+//Saves user name and score in localStorage
 document.getElementById('save-result').addEventListener('click',()=>{
   saveUser();
 });
 
-//Invoked by save-result button. Adds new user score name and score to sessionStorage.
+//Invoked by save-result button. Adds new user score name and score to localStorage.
 function saveUser(){
   let userName = document.getElementById('user-name').value;
     
-  sessionStorage.setItem(userName,moves);
-  addUserScore(userName);
+  localStorage.setItem(userName,moves);
+    
+  addUserScore(userName,'',true);
 }
 
 /*
 * Invoked by saveUser(), displayResults().
-* @ param {string} key - sessionStorage key.
+* @ param {string} key - localStorage key.
+* @ param {string} value - localStorage value.
+* @ param {boolean} bool - true/false.
 * Creates paragraph with user name and score.
 */
-function addUserScore(key){
-  const tableName = sessionStorage.getItem( key ),
+function addUserScore(key,value,bool){
+  const tableName = localStorage.getItem(key),
         resultsParagraph = document.createElement('p'),
         results = document.getElementById('results');
-  
+          
   results.append(resultsParagraph);
-  resultsParagraph.textContent = `${key} scored ${tableName}`;
+
+  if (bool) {
+    resultsParagraph.setAttribute('data-result',tableName);
+    resultsParagraph.textContent = `${key} scored ${tableName}`;
+  } else {
+    resultsParagraph.setAttribute('data-result',value);
+    resultsParagraph.textContent = `${key} scored ${value}`;
+  }
 }
 
 /*
