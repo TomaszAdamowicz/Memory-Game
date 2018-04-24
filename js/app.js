@@ -254,12 +254,13 @@ document.getElementById('save-result').addEventListener('click',()=>{
 
 //Invoked by save-result button. Adds new user score name and score to sessionStorage.
 function saveUser(){
-  let userName = document.getElementById('user-name').value,
-      position = sessionStorage.length;
-      
+  let userName = document.getElementById('user-name').value;
+  
+  console.log(userName);
+  
   sessionStorage.setItem(userName,moves);
   
-  printUserScore(position);
+  addUserScore(userName);
 }
 
 /*
@@ -267,14 +268,13 @@ function saveUser(){
 * @ param {num} pos - position in sessionStorage array.
 * Creates paragraph with user name and score.
 */
-function printUserScore(pos){
-  const tableName = sessionStorage.key( pos ),
-        tableResult = sessionStorage.getItem( sessionStorage.key( pos )),
+function addUserScore(key){
+  const tableName = sessionStorage.getItem( key ),
         resultsParagraph = document.createElement('p'),
         results = document.getElementById('results');
   
   results.append(resultsParagraph);
-  resultsParagraph.textContent = `${tableName} scored ${tableResult}`;
+  resultsParagraph.textContent = `${key} scored ${tableName}`;
 }
 
 /*
