@@ -22,7 +22,7 @@ Web browser with JavaScript enabled.
 ## Instalation
 
 Simply clone repository and open index.html in your favourite browser.
-Game uses localStorage to store user names and their scores.[Read More](https://developer.mozilla.org/en-US/docs/Web/API/Storage/LocalStorage)
+Game uses sessionStorage to store user names and their scores.[Read More](https://developer.mozilla.org/en-US/docs/Web/API/Storage/SessionStorage)
 
 ## License
 
