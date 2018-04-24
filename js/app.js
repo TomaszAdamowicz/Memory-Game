@@ -1,21 +1,21 @@
 // Variables
 const symbols = [
       'fa-anchor',
-      'fa-bicycle',
-      'fa-paper-plane-o',
-      'fa-diamond',
-      'fa-bomb',
-      'fa-leaf',
-      'fa-cube',
-      'fa-bolt',
       'fa-anchor',
       'fa-bicycle',
+      'fa-bicycle',
+      'fa-paper-plane-o',
       'fa-paper-plane-o',
       'fa-diamond',
+      'fa-diamond',
+      'fa-bomb',
       'fa-bomb',
       'fa-leaf',
+      'fa-leaf',
       'fa-cube',
-      'fa-bolt'
+      'fa-cube',
+      'fa-bolt',
+      'fa-bolt',
       ],
       deck = document.getElementById('deck'),
       restartBtn = document.getElementById('restart'),
@@ -166,7 +166,7 @@ function acceptCards(){
 }
 
 /*Invoked by acceptCards().
-* Fires combo notifiaction.
+* Fires combo notifiaction. Updates moves counter.
 * @ param {number} num - nubmer to compare and to print in combo notification.
 */
 function combo(num){
@@ -177,6 +177,9 @@ function combo(num){
     comboNumber.textContent = num;
     comboWindow.classList.add('scaleUp');
     setTimeout(()=>{comboWindow.classList.remove('scaleUp')}, 800);
+    moves--;
+    updateMoves(moves);
+    updateRating(moves);
   }
 }
 
@@ -245,6 +248,35 @@ function finalMessage() {
   printTime(minutes,seconds);
 }
 
+//Saves user name and score in sessionStorage
+document.getElementById('save-result').addEventListener('click',()=>{
+  saveUser();
+});
+
+//Invoked by save-result button. Adds new user score name and score to sessionStorage.
+function saveUser(){
+  let userName = document.getElementById('user-name').value,
+      position = sessionStorage.length;
+      
+  sessionStorage.setItem(userName,moves);
+  
+  printUserScore(position);
+}
+/*
+* Invoked by saveUser(), displayResults().
+* @ param {num} pos - position in sessionStorage array.
+* Creates paragraph with user name and score.
+*/
+function printUserScore(pos){
+  const tableName = sessionStorage.key( pos ),
+        tableResult = sessionStorage.getItem( sessionStorage.key( pos )),
+        resultsParagraph = document.createElement('p'),
+        results = document.getElementById('results');
+  
+  results.append(resultsParagraph);
+  resultsParagraph.textContent = `${tableName} scored ${tableResult}`;
+}
+
 /*
 * Invoked by finalMessage().
 * Display star rating in modal message based on rating variable.
@@ -307,13 +339,13 @@ function timer(){
 
 function printTime(elem1,elem2){
   if (minutes < 10) {
-    elem1.textContent = '0' + minutes;
+    elem1.textContent = `0${minutes}`;
   } else {
     elem1.textContent = minutes;
   }
   
   if (seconds < 10) {
-    elem2.textContent = '0' + seconds;
+    elem2.textContent = `0${seconds}`;
   } else {
     elem2.textContent = seconds;
   }
