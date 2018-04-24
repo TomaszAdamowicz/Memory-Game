@@ -33,7 +33,6 @@ const symbols = [
  * - @matchedCards - number of cards passed by acceptCards()
  * - @seconds,@minutes - numbers used by timer(), startTimer(), stopTimer(), resetTimer()
  */
-
 let cards = [],
     cardsCollection = [],
     moves = 0,
@@ -42,6 +41,7 @@ let cards = [],
     comboCounter = 0,
     seconds = 0,
     minutes = 0;
+    
 /*
  * Display the cards on the page with createDeck().
  *   - shuffle the list of symbols using shuffle();
@@ -50,7 +50,6 @@ let cards = [],
  *   - add each card to cards array.
  *   - listen for the click event on created HTML cards with activateCard().
  */
-
 createDeck();
 
 function createDeck(){
@@ -91,7 +90,6 @@ function shuffle(array) {
 * Add event listener to each cards in the @cards list.
 * Fire game functions. Do it only when item wasn't cliked and @cardsCollection array has two items in it.
 */
-
 function activateCard(){
   for (let i = 0; i < cards.length; i++) {
     
@@ -153,6 +151,7 @@ function dismisCards(){
   }
   comboCounter = 0;
 }
+
 // Invoked by checkCards(). Increases matchedCards variable.
 function acceptCards(){
   let winCards = document.querySelectorAll('div .open');
@@ -262,6 +261,7 @@ function saveUser(){
   
   printUserScore(position);
 }
+
 /*
 * Invoked by saveUser(), displayResults().
 * @ param {num} pos - position in sessionStorage array.
@@ -336,7 +336,6 @@ function timer(){
 * Display time from startTimer()
 * @ param {object} elem1,elem2 - place to display time.
 */
-
 function printTime(elem1,elem2){
   if (minutes < 10) {
     elem1.textContent = `0${minutes}`;
@@ -362,7 +361,6 @@ againBtn.addEventListener('click', () => {
 });
 
 // Reset all variables to initial value, remove cards HTML and create new set, reset timer.
-
 function restartGame(){
   cardsCollection = [];
   cards = [];
